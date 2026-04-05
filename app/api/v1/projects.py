@@ -22,3 +22,10 @@ async def create_project(
     project_data["owner_id"] = current_user.id
 
     return await project_service.create_project(db, project_data,current_user.email)
+
+@router.get("/")
+async def get_projects(
+    db: AsyncSession = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    return await project_service.get_projects_by_user(db, current_user.id)
