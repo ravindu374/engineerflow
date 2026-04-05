@@ -2,20 +2,22 @@
 
 import { useState } from "react";
 import { login } from "@/lib/api";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
     const handleLogin = async () => {
-    const data = await login(email, password);
+        const data = await login(email, password);
 
-    // save token
-    localStorage.setItem("token", data.access_token);
+        // save token
+        localStorage.setItem("token", data.access_token);
 
-    alert("Login successful");
+        alert("Login successful");
 
-    window.location.href = "/dashboard";
+        router.push("/dashboard"); 
     };
 
   return (
