@@ -2,7 +2,7 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 from sqlalchemy.ext.asyncio import AsyncSession
-
+from uuid import UUID
 from app.core.config import settings
 from app.db.deps import get_db
 from app.repositories.user_repository import UserRepository
@@ -30,6 +30,9 @@ async def get_current_user(
 
         if user_id is None:
             raise credentials_exception
+
+
+        user_id = UUID(user_id)   
 
     except JWTError:
         raise credentials_exception
