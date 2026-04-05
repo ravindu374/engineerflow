@@ -7,11 +7,16 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async () => {
+    const handleLogin = async () => {
     const data = await login(email, password);
-    console.log(data);
-    alert("Check console for token");
-  };
+
+    // save token
+    localStorage.setItem("token", data.access_token);
+
+    alert("Login successful");
+
+    window.location.href = "/dashboard";
+    };
 
   return (
     <div className="p-10">
