@@ -32,7 +32,10 @@ async def get_current_user(
             raise credentials_exception
 
 
-        user_id = UUID(user_id)   
+        try:
+            user_id = UUID(user_id)   
+        except Exception:
+            raise credentials_exception 
 
     except JWTError:
         raise credentials_exception
