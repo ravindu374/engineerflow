@@ -12,8 +12,8 @@ export default function Dashboard() {
   useEffect(() => {
     // wait until browser fully loads
     const token = localStorage.getItem("token");
-
-    console.log("TOKEN:", token);
+    console.log("FINAL TOKEN:", token);
+    console.log("TOKEN RAW:", JSON.stringify(token));
 
     if (!token) {
       router.push("/login");
@@ -26,7 +26,7 @@ export default function Dashboard() {
           `${process.env.NEXT_PUBLIC_API_URL}/api/v1/projects`,
           {
             headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${token?.trim()}`,
             },
           }
         );

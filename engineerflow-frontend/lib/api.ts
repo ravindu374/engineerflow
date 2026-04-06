@@ -1,31 +1,15 @@
-import { getToken } from "./auth";
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
+// ---------- Helper ----------
+function getToken(): string | null {
+  if (typeof window === "undefined") return null;
 
-export async function getProjects() {
-  const token = getToken();
+  const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API_URL}/api/v1/projects`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-
-  // handle unauthorized
-  if (res.status === 401) {
-    localStorage.removeItem("token");
-    window.location.href = "/login";
-    return;
-  }
-
-  // handle other errors
-  if (!res.ok) {
-    throw new Error("Failed to fetch projects");
-  }
-
-  return res.json();
+  return token ? token.replace(/"/g, "") : null;   
 }
 
+// ---------- Login ----------
 export async function login(email: string, password: string) {
   const res = await fetch(`${API_URL}/api/v1/auth/login`, {
     method: "POST",
@@ -39,8 +23,51 @@ export async function login(email: string, password: string) {
   });
 
   if (!res.ok) {
-    throw new Error("Login failed");
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Login failed");
   }
 
-  return res.json();
+  const data = await res.json();
+
+  // 🔥 ensure token is saved here (safe)
+  localStorage.setItem("token", data.access_token);
+
+  console.log("TOKEN SAVED:", data.access_token);
+
+  return data;
+}
+
+// ---------- Get Projects ----------
+export async function getProjects() {
+  const token = getToken();
+
+  console.log("TOKEN USED:", token);
+
+  if (!token) {
+    console.warn("No token found");
+    return [];
+  }
+
+  const res = await fetch(`${API_URL}/api/v1/projects`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (res.status === 401) {
+    console.error("Unauthorized - invalid token");
+    return [];
+  }
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.detail || "Failed to fetch projects");
+  }
+
+  const data = await res.json();
+
+  console.log("API RESPONSE:", data);
+
+  return Array.isArray(data) ? data : [];
 }
