@@ -29,6 +29,7 @@ export default function ProjectDetails() {
     loadTasks();
   }, [id]);
 
+  // CREATE TASK
   async function createTask() {
     const token = localStorage.getItem("token");
 
@@ -50,6 +51,28 @@ export default function ProjectDetails() {
     const newTask = await res.json();
     setTasks((prev) => [...prev, newTask]);
     setTitle("");
+  }
+
+  // MOVE THIS OUTSIDE createTask
+  async function updateStatus(taskId: string, status: string) {
+    const token = localStorage.getItem("token");
+
+    await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/tasks/${taskId}/status?status=${status}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // update UI instantly
+    setTasks((prev) =>
+      prev.map((t) =>
+        t.id === taskId ? { ...t, status } : t
+      )
+    );
   }
 
   return (
@@ -75,15 +98,35 @@ export default function ProjectDetails() {
       </div>
 
       {/* TASK LIST */}
-      {tasks.length === 0 ? (
-        <p>No tasks yet</p>
-      ) : (
-        tasks.map((t) => (
-          <div key={t.id} className="border p-2 mb-2">
-            {t.title} - {t.status}
+      {tasks.map((t) => (
+        <div key={t.id} className="border p-2 mb-2">
+          <div className="font-semibold">{t.title}</div>
+          <div>Status: {t.status}</div>
+
+          <div className="mt-2">
+            <button
+              onClick={() => updateStatus(t.id, "TODO")}
+              className="mr-2 px-2 py-1 bg-gray-300"
+            >
+              TODO
+            </button>
+
+            <button
+              onClick={() => updateStatus(t.id, "IN_PROGRESS")}
+              className="mr-2 px-2 py-1 bg-yellow-400"
+            >
+              IN PROGRESS
+            </button>
+
+            <button
+              onClick={() => updateStatus(t.id, "DONE")}
+              className="px-2 py-1 bg-green-500 text-white"
+            >
+              DONE
+            </button>
           </div>
-        ))
-      )}
+        </div>
+      ))}
     </div>
   );
 }

@@ -38,3 +38,27 @@ async def get_tasks(
         raise HTTPException(status_code=403, detail="Not authorized")
 
     return await task_service.get_tasks_by_project(db, project_id)
+
+@router.put("/{task_id}/status")
+async def update_task_status(
+    task_id: str,
+    status: str,
+    db: AsyncSession = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    task = await task_service.task_repo.get(db, task_id)
+
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found")
+
+    # check ownership via project
+    project = await project_repo.get(db, task.project_id)
+
+    if not project or project.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    task.status = status
+    await db.commit()
+    await db.refresh(task)
+
+    return task
