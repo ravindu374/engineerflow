@@ -8,7 +8,7 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<any[]>([]);
   const [checkingAuth, setCheckingAuth] = useState(true);
   const router = useRouter();
-
+  
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
 
@@ -94,7 +94,13 @@ export default function Dashboard() {
       ) : (
         projects.map((p: any) => (
           <div key={p.id} className="border p-2 mb-2">
-            {p.name}
+            {<div
+                key={p.id}
+                onClick={() => router.push(`/projects/${p.id}`)}
+                className="border p-2 mb-2 cursor-pointer hover:bg-gray-100"
+              >
+                {p.name}
+              </div>}
           </div>
         ))
       )}
