@@ -48,7 +48,7 @@ export async function getProjects() {
     return [];
   }
 
-  const res = await fetch(`${API_URL}/api/v1/projects`, {
+  const res = await fetch(`${API_URL}/api/v1/projects/`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,

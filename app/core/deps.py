@@ -17,6 +17,8 @@ async def get_current_user(
     
 ):
     print("TOKEN RECEIVED:", token)
+    print("SECRET:", settings.jwt_secret)
+    
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
