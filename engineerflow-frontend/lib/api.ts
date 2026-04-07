@@ -71,3 +71,25 @@ export async function getProjects() {
 
   return Array.isArray(data) ? data : [];
 }
+
+export async function createProject(name: string, description: string) {
+  const token = localStorage.getItem("token");
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/projects/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      name,
+      description,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to create project");
+  }
+
+  return res.json();
+}

@@ -25,3 +25,16 @@ async def create_task(
         raise HTTPException(status_code=403, detail="Not authorized")
 
     return await task_service.create_task(db, task.model_dump())
+
+@router.get("/{project_id}", response_model=list[TaskResponse])
+async def get_tasks(
+    project_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    project = await project_repo.get(db, project_id)
+
+    if not project or project.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized")
+
+    return await task_service.get_tasks_by_project(db, project_id)
