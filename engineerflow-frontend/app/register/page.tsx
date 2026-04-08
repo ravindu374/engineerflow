@@ -77,7 +77,7 @@ export default function RegisterPage() {
               placeholder="you@company.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:border-purple-400"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-sm text-black placeholder-gray-400 focus:outline-none focus:border-purple-400"
             />
           </div>
 
@@ -91,7 +91,7 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleRegister()}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-sm focus:outline-none focus:border-purple-400"
+              className="w-full px-4 py-2.5 rounded-lg border border-gray-200 bg-gray-50 text-sm text-black placeholder-gray-400 focus:outline-none focus:border-purple-400"
             />
           </div>
         </div>
