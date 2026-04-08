@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { createProject } from "@/lib/api";
+import { getCurrentUser } from "@/lib/api";
 
 const ACCENT_COLORS = ["bg-purple-500", "bg-teal-500", "bg-orange-500", "bg-pink-500", "bg-blue-500", "bg-amber-500"];
 
@@ -12,6 +13,7 @@ export default function Dashboard() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const router = useRouter();
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -24,6 +26,11 @@ export default function Dashboard() {
         });
         const data = await res.json();
         setProjects(Array.isArray(data) ? data : []);
+        const userRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const userData = await userRes.json();
+        setUser(userData);
       } catch (e) {
         console.error(e);
       } finally {
@@ -64,9 +71,13 @@ export default function Dashboard() {
         </h1>
         <div className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-full px-4 py-1.5">
           <div className="w-6 h-6 rounded-full bg-purple-100 text-purple-700 text-xs font-medium flex items-center justify-center">
-            JD
+            {user?.full_name
+              ?.split(" ")
+              .map((n: string) => n[0])
+              .join("")
+              .slice(0, 2) || "U"}
           </div>
-          <span className="text-sm text-gray-500">Jane Doe</span>
+          <span className="text-sm text-gray-500">{user?.full_name || "Loading..."}</span>
         </div>
       </header>
 

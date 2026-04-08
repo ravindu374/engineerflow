@@ -1,4 +1,5 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 console.log("API_URL:", process.env.NEXT_PUBLIC_API_URL);
 // ---------- Helper ----------
 function getToken(): string | null {
@@ -72,6 +73,7 @@ export async function getProjects() {
   return Array.isArray(data) ? data : [];
 }
 
+// ---------- Create Project ----------
 export async function createProject(name: string, description: string) {
   const token = localStorage.getItem("token");
 
@@ -99,24 +101,43 @@ export async function registerUser(
   password: string,
   full_name: string
 ) {
+  const res = await fetch(`${API_URL}/api/v1/users/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+      full_name,
+    }),
+  });
+
+  if (!res.ok) {
+    const text = await res.text(); 
+    console.log("RAW RESPONSE:", text);
+
+    throw new Error("Registration failed");
+  }
+
+  return res.json();
+}
+
+// ---------- Get Current User ----------
+export async function getCurrentUser() {
+  const token = localStorage.getItem("token");
+
   const res = await fetch(
-    `${API_URL}/api/v1/users/`,
+    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/me`,
     {
-      method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({
-        email,
-        password,
-        full_name,
-      }),
     }
   );
 
   if (!res.ok) {
-  const errorData = await res.json();
-  throw new Error(errorData.detail || "Registration failed");
+    throw new Error("Failed to fetch user");
   }
 
   return res.json();
