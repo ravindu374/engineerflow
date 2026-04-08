@@ -1,5 +1,5 @@
 from datetime import datetime
-import pytz
+
 
 from app.db.mongo import activity_collection
 
@@ -11,7 +11,7 @@ class ActivityService:
                     "user_id": user_id,
                     "action": action,
                     "details": details,
-                    "timestamp": datetime.now(pytz.timezone("Asia/Colombo")),
+                    "timestamp": datetime.now(),
                 }
             )
         except Exception as e:
