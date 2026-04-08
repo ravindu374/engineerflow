@@ -1,8 +1,7 @@
 from datetime import datetime
-from zoneinfo import ZoneInfo
+import pytz
 
 from app.db.mongo import activity_collection
-
 
 class ActivityService:
     async def log_activity(self, user_id: str, action: str, details: dict):
@@ -12,7 +11,7 @@ class ActivityService:
                     "user_id": user_id,
                     "action": action,
                     "details": details,
-                    "timestamp": datetime.now(ZoneInfo("Asia/Colombo")),
+                    "timestamp": datetime.now(pytz.timezone("Asia/Colombo")),
                 }
             )
         except Exception as e:
