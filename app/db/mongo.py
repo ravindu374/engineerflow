@@ -11,3 +11,4 @@ client = AsyncIOMotorClient(
 
 mongo_db = client["engineerflow"]
 activity_collection = mongo_db["activity_logs"]
+print("MONGO URL:", settings.mongo_url)
