@@ -1,4 +1,5 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 from app.db.mongo import activity_collection
 
@@ -11,7 +12,7 @@ class ActivityService:
                     "user_id": user_id,
                     "action": action,
                     "details": details,
-                    "timestamp": datetime.utcnow(),
+                    "timestamp": datetime.now(ZoneInfo("Asia/Colombo")),
                 }
             )
         except Exception as e:
