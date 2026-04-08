@@ -100,7 +100,7 @@ export async function registerUser(
   full_name: string
 ) {
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/`,
+    `${API_URL}/api/v1/users/`,
     {
       method: "POST",
       headers: {
