@@ -29,7 +29,7 @@ export async function login(email: string, password: string) {
 
   const data = await res.json();
 
-  // 🔥 ensure token is saved here (safe)
+  // ensure token is saved here (safe)
   localStorage.setItem("token", data.access_token);
 
   console.log("TOKEN SAVED:", data.access_token);
