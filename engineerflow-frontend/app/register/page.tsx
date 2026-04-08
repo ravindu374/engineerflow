@@ -19,9 +19,9 @@ export default function RegisterPage() {
 
       // after success → go to login
       router.push("/login");
-    } catch (e) {
-      console.error(e);
-      alert("Registration failed (maybe email already exists)");
+    } catch (e:  any) {
+        console.error(e);
+        alert(e.message);
     } finally {
       setLoading(false);
     }

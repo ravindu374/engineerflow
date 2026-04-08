@@ -115,7 +115,8 @@ export async function registerUser(
   );
 
   if (!res.ok) {
-    throw new Error("Registration failed");
+  const errorData = await res.json();
+  throw new Error(errorData.detail || "Registration failed");
   }
 
   return res.json();
